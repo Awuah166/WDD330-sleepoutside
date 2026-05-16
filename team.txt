@@ -3,3 +3,8 @@ https://trello.com/invite/b/69fbc02020bf5c8b491ed318/ATTI505689e66fa24474f6981e2
 
 Team Members:
 Awuah Dennis
+
+Recent Contributions:
+- Fixed ESLint quote errors
+- Resolved cart rendering null error
+- Added missing @babel/preset-env dependency
