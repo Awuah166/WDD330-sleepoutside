@@ -1,7 +1,7 @@
-// Import a helper function that displays a list of items on the page.
+// Utility helper that renders a list using a provided template function.
 import { renderListWithTemplate } from './utils.mjs';
 
-// Builds the HTML for one product card.
+// Builds the HTML for a product card using the provided product data.
 function productCardTemplate(product) {
   return `<li class="product-card">
     <a href="product_pages/?product=${product.Id}">
@@ -31,7 +31,7 @@ export default class ProductList {
     this.renderList(list);
   }
 
-  // Display the product cards inside the list element.
+   // Display the product cards inside the list element.
   renderList(list) {
     renderListWithTemplate(
       productCardTemplate,
