@@ -1,5 +1,7 @@
+// Utility helper that renders a list using a provided template function.
 import { renderListWithTemplate } from './utils.mjs';
 
+// Builds the HTML for a product card using the provided product data.
 function productCardTemplate(product) {
   return `<li class="product-card">
     <a href="product_pages/?product=${product.Id}">
@@ -14,18 +16,22 @@ function productCardTemplate(product) {
   </li>`;
 }
 
+// This class gets product data and displays it in the product list.
 export default class ProductList {
+  // Save the category, data source, and HTML element for later use.
   constructor(category, dataSource, listElement) {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
   }
 
+  // Get the product data, then render it on the page.
   async init() {
     const list = await this.dataSource.getData();
     this.renderList(list);
   }
 
+   // Display the product cards inside the list element.
   renderList(list) {
     renderListWithTemplate(
       productCardTemplate,
