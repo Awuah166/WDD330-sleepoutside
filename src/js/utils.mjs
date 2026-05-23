@@ -45,3 +45,39 @@ export function renderListWithTemplate(
 
   parentElement.insertAdjacentHTML(position, htmlStrings.join(''));
 }
+
+export function renderWithTemplate(template, parentElement, data, callback) {
+  const html = typeof template === 'function' ? template(data) : template;
+
+  parentElement.innerHTML = html;
+
+  if (callback) {
+    callback(data);
+  }
+}
+
+export async function loadTemplate(path) {
+  const response = await fetch(path);
+
+  if (!response.ok) {
+    throw new Error(`Unable to load template: ${path}`);
+  }
+
+  return await response.text();
+}
+
+export async function loadHeaderFooter() {
+  const headerHtml = await loadTemplate('/partials/header.html');
+  const footerHtml = await loadTemplate('/partials/footer.html');
+
+  const headerElement = document.querySelector('#header');
+  const footerElement = document.querySelector('#footer');
+
+  if (headerElement) {
+    renderWithTemplate(headerHtml, headerElement);
+  }
+
+  if (footerElement) {
+    renderWithTemplate(footerHtml, footerElement);
+  }
+}
