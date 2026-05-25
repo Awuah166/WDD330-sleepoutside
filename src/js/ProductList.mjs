@@ -1,37 +1,43 @@
 // Utility helper that renders a list using a provided template function.
 import { renderListWithTemplate } from './utils.mjs';
 
-// Builds the HTML for a product card using the provided product data.
+// Build a single product card's HTML for the product list page.
 function productCardTemplate(product) {
+  const imageSrc =
+    product.Images?.PrimaryMedium ||
+    product.Images?.PrimarySmall ||
+    product.Image ||
+    '';
+  const brandName = product.Brand?.Name || '';
+  const productName = product.NameWithoutBrand || product.Name || '';
+  const price = product.FinalPrice ?? product.ListPrice ?? 0;
+
   return `<li class="product-card">
-    <a href="product_pages/?product=${product.Id}">
+    <a href="/product_pages/?product=${product.Id}">
       <img
-        src="${product.Image}"
-        alt="${product.NameWithoutBrand}"
+        src="${imageSrc}"
+        alt="${productName}"
       />
-      <h3 class="card__brand">${product.Brand.Name}</h3>
-      <h2 class="card__name">${product.NameWithoutBrand}</h2>
-      <p class="product-card__price">$${product.FinalPrice.toFixed(2)}</p>
+      <h3 class="card__brand">${brandName}</h3>
+      <h2 class="card__name">${productName}</h2>
+      <p class="product-card__price">$${price.toFixed(2)}</p>
     </a>
   </li>`;
 }
 
-// This class gets product data and displays it in the product list.
+// ProductList renders products into a list element for the selected category.
 export default class ProductList {
-  // Save the category, data source, and HTML element for later use.
   constructor(category, dataSource, listElement) {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
   }
 
-  // Get the product data, then render it on the page.
   async init() {
-    const list = await this.dataSource.getData();
+    const list = await this.dataSource.getData(this.category);
     this.renderList(list);
   }
 
-   // Display the product cards inside the list element.
   renderList(list) {
     renderListWithTemplate(
       productCardTemplate,

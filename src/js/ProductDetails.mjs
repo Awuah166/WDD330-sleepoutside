@@ -1,5 +1,6 @@
 import { getLocalStorage, setLocalStorage } from './utils.mjs';
 
+// ProductDetails loads and renders a single product on the product detail page.
 export default class ProductDetails {
   constructor(productId, dataSource) {
     this.productId = productId;
@@ -8,6 +9,7 @@ export default class ProductDetails {
   }
 
   async init() {
+    // Load product details by ID and render the page.
     if (!this.productId) {
       this.product = null;
       this.renderProductDetails();
@@ -24,6 +26,7 @@ export default class ProductDetails {
   }
 
   addProductToCart() {
+    // Add the current product to the local storage cart.
     if (!this.product) {
       return;
     }
@@ -48,8 +51,12 @@ export default class ProductDetails {
     }
 
     const brand = this.product.Brand?.Name || '';
-    const title = this.product.NameWithoutBrand || this.product.Name;
-    const imageSrc = this.product.Image || '';
+    const title = this.product.NameWithoutBrand || this.product.Name || '';
+    const imageSrc =
+      this.product.Images?.PrimaryLarge ||
+      this.product.Images?.PrimaryMedium ||
+      this.product.Image ||
+      '';
     const color = this.product.Colors?.[0]?.ColorName || '';
     const description = this.product.DescriptionHtmlSimple || '';
     const price = this.product.FinalPrice ?? this.product.ListPrice ?? 0;
