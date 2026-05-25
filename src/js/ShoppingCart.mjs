@@ -2,10 +2,16 @@ import { getLocalStorage, renderListWithTemplate, renderWithTemplate } from './u
 
 // Builds the HTML for a cart item using the provided item data.
 function cartItemTemplate(item) {
+  const imageSrc =
+    item.Images?.PrimaryMedium ||
+    item.Images?.PrimarySmall ||
+    item.Image ||
+    '';
+
   return `<li class='cart-card divider'>
   <a href='#' class='cart-card__image'>
     <img
-      src='${item.Image}'
+      src='${imageSrc}'
       alt='${item.Name}'
     />
   </a>
