@@ -1,5 +1,6 @@
-import { getLocalStorage, renderWithTemplate } from './utils.mjs';
+import { getLocalStorage, renderListWithTemplate, renderWithTemplate } from './utils.mjs';
 
+// Builds the HTML for a cart item using the provided item data.
 function cartItemTemplate(item) {
   return `<li class='cart-card divider'>
   <a href='#' class='cart-card__image'>
@@ -17,6 +18,7 @@ function cartItemTemplate(item) {
 </li>`;
 }
 
+// This class displays the items in the shopping cart.
 export default class ShoppingCart {
   constructor(listElement) {
     this.listElement = listElement;
@@ -27,15 +29,23 @@ export default class ShoppingCart {
     this.renderList(items);
   }
 
+  // Display the cart items in the list element.
   renderList(list) {
     if (!this.listElement) return;
 
+    // Show empty cart message if no items
     if (!list || list.length === 0) {
       renderWithTemplate('<p>Your cart is empty.</p>', this.listElement);
       return;
     }
 
-    const html = list.map(cartItemTemplate).join('');
-    renderWithTemplate(html, this.listElement);
+    // Render cart items using the template
+    renderListWithTemplate(
+      cartItemTemplate,
+      this.listElement,
+      list,
+      'afterbegin',
+      true
+    );
   }
 }
