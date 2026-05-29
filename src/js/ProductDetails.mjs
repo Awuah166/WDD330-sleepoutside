@@ -1,4 +1,4 @@
-import { getCartItems, setLocalStorage, updateCartCount } from './utils.mjs';
+import { getCartItems, renderBreadcrumb, setLocalStorage, updateCartCount } from './utils.mjs';
 
 // ProductDetails loads and renders a single product on the product detail page.
 export default class ProductDetails {
@@ -32,7 +32,14 @@ export default class ProductDetails {
     }
 
     const cartItems = getCartItems();
-    cartItems.push(this.product);
+    const existingItem = cartItems.find((item) => item.Id === this.product.Id);
+
+    if (existingItem) {
+      existingItem.Quantity = Number(existingItem.Quantity || 1) + 1;
+    } else {
+      cartItems.push({ ...this.product, Quantity: 1 });
+    }
+
     setLocalStorage('so-cart', cartItems);
     updateCartCount();
   }
@@ -53,11 +60,14 @@ export default class ProductDetails {
 
     const brand = this.product.Brand?.Name || '';
     const title = this.product.NameWithoutBrand || this.product.Name || '';
-    const imageSrc =
-      this.product.Images?.PrimaryLarge ||
+    const mediumImage =
       this.product.Images?.PrimaryMedium ||
+      this.product.Images?.PrimarySmall ||
       this.product.Image ||
       '';
+    const largeImage =
+      this.product.Images?.PrimaryLarge ||
+      mediumImage;
     const color = this.product.Colors?.[0]?.ColorName || '';
     const description = this.product.DescriptionHtmlSimple || '';
     const price = Number(this.product.FinalPrice ?? this.product.ListPrice ?? 0);
@@ -65,16 +75,23 @@ export default class ProductDetails {
     const discountAmount = suggestedPrice - price;
     const isDiscounted = discountAmount > 0;
 
+    renderBreadcrumb([
+      { label: 'Products', current: false },
+      { label: title, current: true },
+    ]);
+
     container.innerHTML = `
       <h3>${brand}</h3>
       <h2 class="divider">${title}</h2>
-      <img
-        class="divider"
-        src="${imageSrc}"
-        alt="${title}"
-      />
+      <picture class="divider">
+        <source media="(min-width: 700px)" srcset="${largeImage}" />
+        <img
+          src="${mediumImage}"
+          alt="${title}"
+        />
+      </picture>
       <p class="product-card__price">$${price.toFixed(2)}</p>
-      ${isDiscounted ? `<p class="product-card__discount">Save $${discountAmount.toFixed(2)}</p>` : ''}
+      ${isDiscounted ? `<p class="product-detail__discount">Discounted — Save $${discountAmount.toFixed(2)}</p>` : ''}
       <p class="product__color">${color}</p>
       <p class="product__description">${description}</p>
       <div class="product-detail__add">
