@@ -10,9 +10,12 @@ function productCardTemplate(product) {
     '';
   const brandName = product.Brand?.Name || '';
   const productName = product.NameWithoutBrand || product.Name || '';
-  const price = product.FinalPrice ?? product.ListPrice ?? 0;
+  const price = Number(product.FinalPrice ?? product.ListPrice ?? 0);
+  const suggestedPrice = Number(product.SuggestedRetailPrice ?? price);
+  const discountAmount = suggestedPrice - price;
+  const isDiscounted = discountAmount > 0;
 
-  return `<li class="product-card">
+  return `<li class="product-card${isDiscounted ? ' product-card--discounted' : ''}">
     <a href="/product_pages/?product=${product.Id}">
       <img
         src="${imageSrc}"
@@ -21,6 +24,7 @@ function productCardTemplate(product) {
       <h3 class="card__brand">${brandName}</h3>
       <h2 class="card__name">${productName}</h2>
       <p class="product-card__price">$${price.toFixed(2)}</p>
+      ${isDiscounted ? `<p class="product-card__discount">Save $${discountAmount.toFixed(2)}</p>` : ''}
     </a>
   </li>`;
 }

@@ -7,11 +7,37 @@ export function qs(selector, parent = document) {
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
+  const storedData = localStorage.getItem(key);
+
+  if (storedData === null) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(storedData);
+  } catch (error) {
+    console.warn(`Unable to parse localStorage value for ${key}`, error);
+    return [];
+  }
 }
 // save data to local storage
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
+}
+
+export function getCartItems() {
+  const cartItems = getLocalStorage('so-cart');
+  return Array.isArray(cartItems) ? cartItems : [];
+}
+
+export function updateCartCount() {
+  const cartCounts = document.querySelectorAll('.cart-count');
+  const cartItems = getCartItems();
+
+  cartCounts.forEach((countElement) => {
+    countElement.textContent = cartItems.length;
+    countElement.setAttribute('aria-label', `${cartItems.length} items in cart`);
+  });
 }
 
 export function getParam(param) {
@@ -75,6 +101,7 @@ export async function loadHeaderFooter() {
 
   if (headerElement) {
     renderWithTemplate(headerHtml, headerElement);
+    updateCartCount();
   }
 
   if (footerElement) {

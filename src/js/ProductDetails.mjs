@@ -1,4 +1,4 @@
-import { getLocalStorage, setLocalStorage } from './utils.mjs';
+import { getCartItems, setLocalStorage, updateCartCount } from './utils.mjs';
 
 // ProductDetails loads and renders a single product on the product detail page.
 export default class ProductDetails {
@@ -31,13 +31,14 @@ export default class ProductDetails {
       return;
     }
 
-    const cartItems = getLocalStorage('so-cart') || [];
+    const cartItems = getCartItems();
     cartItems.push(this.product);
     setLocalStorage('so-cart', cartItems);
+    updateCartCount();
   }
 
   renderProductDetails() {
-    const container = document.getElementById('productDetail');
+    const container = document.getElementById('productDetail') || document.querySelector('.product-detail');
     if (!container) {
       return;
     }
@@ -59,7 +60,10 @@ export default class ProductDetails {
       '';
     const color = this.product.Colors?.[0]?.ColorName || '';
     const description = this.product.DescriptionHtmlSimple || '';
-    const price = this.product.FinalPrice ?? this.product.ListPrice ?? 0;
+    const price = Number(this.product.FinalPrice ?? this.product.ListPrice ?? 0);
+    const suggestedPrice = Number(this.product.SuggestedRetailPrice ?? price);
+    const discountAmount = suggestedPrice - price;
+    const isDiscounted = discountAmount > 0;
 
     container.innerHTML = `
       <h3>${brand}</h3>
@@ -70,6 +74,7 @@ export default class ProductDetails {
         alt="${title}"
       />
       <p class="product-card__price">$${price.toFixed(2)}</p>
+      ${isDiscounted ? `<p class="product-card__discount">Save $${discountAmount.toFixed(2)}</p>` : ''}
       <p class="product__color">${color}</p>
       <p class="product__description">${description}</p>
       <div class="product-detail__add">
