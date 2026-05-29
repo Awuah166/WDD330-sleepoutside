@@ -7,11 +7,63 @@ export function qs(selector, parent = document) {
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
+  const storedData = localStorage.getItem(key);
+
+  if (storedData === null) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(storedData);
+  } catch (error) {
+    console.warn(`Unable to parse localStorage value for ${key}`, error);
+    return [];
+  }
 }
 // save data to local storage
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
+}
+
+export function getCartItems() {
+  const cartItems = getLocalStorage('so-cart');
+  return Array.isArray(cartItems) ? cartItems : [];
+}
+
+export function updateCartCount() {
+  const cartCounts = document.querySelectorAll('.cart-count');
+  const cartItems = getCartItems();
+  const totalQuantity = cartItems.reduce((sum, item) => sum + Number(item.Quantity || 1), 0);
+
+  cartCounts.forEach((countElement) => {
+    countElement.textContent = totalQuantity;
+    countElement.setAttribute('aria-label', `${totalQuantity} items in cart`);
+  });
+}
+
+export function renderBreadcrumb(segments = []) {
+  const breadcrumb = qs('#breadcrumb');
+
+  if (!breadcrumb) {
+    return;
+  }
+
+  if (!segments.length) {
+    breadcrumb.innerHTML = '';
+    breadcrumb.classList.add('hide');
+    return;
+  }
+
+  breadcrumb.classList.remove('hide');
+  breadcrumb.innerHTML = segments.map((segment, index) => {
+    const isCurrent = segment.current || index === segments.length - 1;
+
+    if (isCurrent) {
+      return `<span class="breadcrumb__current">${segment.label}</span>`;
+    }
+
+    return `<span class="breadcrumb__item">${segment.label}</span>`;
+  }).join(' <span class="breadcrumb__separator">→</span> ');
 }
 
 export function getParam(param) {
@@ -72,9 +124,16 @@ export async function loadHeaderFooter() {
 
   const headerElement = document.querySelector('#header');
   const footerElement = document.querySelector('#footer');
+  const breadcrumbElement = document.querySelector('#breadcrumb');
 
   if (headerElement) {
     renderWithTemplate(headerHtml, headerElement);
+    updateCartCount();
+  }
+
+  if (breadcrumbElement) {
+    breadcrumbElement.classList.add('hide');
+    breadcrumbElement.innerHTML = '';
   }
 
   if (footerElement) {
