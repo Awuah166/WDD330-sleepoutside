@@ -1,5 +1,6 @@
 // Initialize the category or search product listing page.
-import ProductData from './ProductData.mjs';
+// This page supports both category browsing and search results.
+import ExternalServices from './ExternalServices.mjs';
 import ProductList from './ProductList.mjs';
 import { loadHeaderFooter, getParam, renderBreadcrumb } from './utils.mjs';
 
@@ -7,7 +8,7 @@ loadHeaderFooter();
 
 const category = getParam('category') || 'tents';
 const searchQuery = getParam('search');
-const dataSource = new ProductData();
+const dataSource = new ExternalServices();
 const listElement = document.querySelector('.product-list');
 
 // Map URL categories to display-friendly labels.

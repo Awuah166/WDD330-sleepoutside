@@ -15,8 +15,73 @@
     <header id="header" class="divider"></header>
 
     <main class="divider">
-      <section class="products">
-        <h2>Review & Place your Order</h2>
+      <section class="products checkout-page">
+        <!-- Checkout page title -->
+        <h2>Review & Place Your Order</h2>
+
+        <div class="checkout-layout">
+          <!-- Main checkout form collects customer and payment details -->
+          <form id="checkoutForm" class="checkout-form">
+            <fieldset>
+              <legend>Customer Name</legend>
+              <label>
+                First Name
+                <input name="fname" type="text" required />
+              </label>
+              <label>
+                Last Name
+                <input name="lname" type="text" required />
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend>Address</legend>
+              <label>
+                Street Address
+                <input name="street" type="text" required />
+              </label>
+              <label>
+                City
+                <input name="city" type="text" required />
+              </label>
+              <label>
+                State
+                <input name="state" type="text" required />
+              </label>
+              <label>
+                ZIP Code
+                <input name="zip" type="text" required />
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend>Payment Information</legend>
+              <label>
+                Credit Card Number
+                <input name="cardNumber" type="text" required />
+              </label>
+              <label>
+                Expiration Date
+                <input name="expiration" type="text" placeholder="MM/YY" required />
+              </label>
+              <label>
+                Security Code
+                <input name="code" type="text" required />
+              </label>
+            </fieldset>
+
+            <button type="submit">Submit Order</button>
+          </form>
+
+          <!-- Order summary panel: subtotal, tax, shipping, and total values -->
+          <aside class="order-summary" id="orderSummary">
+            <h3>Order Summary</h3>
+            <p>Subtotal: <span id="subtotal">$0.00</span></p>
+            <p>Tax: <span id="tax">$0.00</span></p>
+            <p>Shipping Estimate: <span id="shipping">$0.00</span></p>
+            <p>Order Total: <span id="orderTotal">$0.00</span></p>
+          </aside>
+        </div>
       </section>
     </main>
 
