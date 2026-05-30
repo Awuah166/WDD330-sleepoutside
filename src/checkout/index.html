@@ -46,11 +46,11 @@
               </label>
               <label>
                 State
-                <input name="state" type="text" required />
+                <input name="state" type="text" pattern="[A-Za-z]{2}" title="Two-letter state code" required />
               </label>
               <label>
                 ZIP Code
-                <input name="zip" type="text" required />
+                <input name="zip" type="text" inputmode="numeric" pattern="\d{5}" title="Five digit ZIP code" required />
               </label>
             </fieldset>
 
@@ -58,15 +58,15 @@
               <legend>Payment Information</legend>
               <label>
                 Credit Card Number
-                <input name="cardNumber" type="text" required />
+                <input name="cardNumber" type="tel" inputmode="numeric" pattern="\d{13,19}" title="Enter 13 to 19 digits" required />
               </label>
               <label>
                 Expiration Date
-                <input name="expiration" type="text" placeholder="MM/YY" required />
+                <input name="expiration" type="text" placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/\d{2}" title="Enter a valid expiration date, for example 08/25" required />
               </label>
               <label>
                 Security Code
-                <input name="code" type="text" required />
+                <input name="code" type="tel" inputmode="numeric" pattern="\d{3,4}" title="Enter a 3 or 4 digit security code" required />
               </label>
             </fieldset>
 

@@ -118,6 +118,28 @@ export async function loadTemplate(path) {
   return await response.text();
 }
 
+export function alertMessage(message, scrollToTop = false) {
+  const main = document.querySelector('main');
+
+  if (!main) {
+    return;
+  }
+
+  const existingAlert = document.querySelector('.page-alert');
+  if (existingAlert) {
+    existingAlert.remove();
+  }
+
+  const alertElement = document.createElement('div');
+  alertElement.className = 'page-alert page-alert--error';
+  alertElement.textContent = message;
+  main.prepend(alertElement);
+
+  if (scrollToTop) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
 export async function loadHeaderFooter() {
   const headerHtml = await loadTemplate('/partials/header.html');
   const footerHtml = await loadTemplate('/partials/footer.html');

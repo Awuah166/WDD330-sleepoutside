@@ -575,6 +575,20 @@ button {
   padding: 0.75rem 1rem;
 }
 
+.page-alert {
+  background: rgba(255, 235, 238, 0.95);
+  border: 1px solid #e53935;
+  color: #b71c1c;
+  padding: 1rem 1.25rem;
+  margin: 1rem;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+.page-alert--error {
+  background: rgba(255, 235, 238, 0.96);
+}
+
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;

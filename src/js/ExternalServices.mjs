@@ -2,12 +2,17 @@
 const baseURL = import.meta.env.VITE_SERVER_URL;
 
 // Convert a fetch response to JSON, or throw when the response is not OK.
-function convertToJson(res) {
+async function convertToJson(res) {
+  const jsonResponse = await res.json();
+
   if (res.ok) {
-    return res.json();
+    return jsonResponse;
   }
 
-  throw new Error('Bad Response');
+  throw {
+    name: 'servicesError',
+    message: jsonResponse,
+  };
 }
 
 // ExternalServices handles API requests for product data and order submission.
