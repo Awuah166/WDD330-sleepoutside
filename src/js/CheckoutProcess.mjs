@@ -1,4 +1,4 @@
-import { getLocalStorage } from './utils.mjs';
+import { getLocalStorage, alertMessage } from './utils.mjs';
 import ExternalServices from './ExternalServices.mjs';
 
 // CheckoutProcess manages the order summary calculation and final form submission.
@@ -111,7 +111,19 @@ export default class CheckoutProcess {
       tax: this.tax.toFixed(2),
     };
 
-    const response = await this.service.checkout(orderPayload);
-    return response;
+    try {
+      const response = await this.service.checkout(orderPayload);
+      localStorage.removeItem(this.key);
+      window.location.href = 'success.html';
+      return response;
+    } catch (err) {
+      const errorMessage = err?.message ?? 'Unable to complete order.';
+      const displayMessage = typeof errorMessage === 'object'
+        ? JSON.stringify(errorMessage)
+        : String(errorMessage);
+
+      alertMessage(displayMessage, true);
+      return null;
+    }
   }
 }
